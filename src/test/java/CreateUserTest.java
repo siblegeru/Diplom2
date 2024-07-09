@@ -1,4 +1,5 @@
 import diplom.CreateUserStep;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
@@ -19,14 +20,16 @@ public class CreateUserTest {
     private CreateUserStep createUserStep = new CreateUserStep();
 
     @Before
+    @DisplayName("Генерация пользователя")
     public void userData(){
         email = RandomStringUtils.randomAlphabetic(10) + "@yandex.ru";
         password = RandomStringUtils.randomAlphabetic(10);
         name = RandomStringUtils.randomAlphabetic(10);
     }
 
-    //создание уникального пользователя
+
     @Test
+    @DisplayName("Создание уникального пользователя")
     public void possibilityCreateNewUser() {
         RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
         createUserStep
@@ -39,8 +42,9 @@ public class CreateUserTest {
                 .body("refreshToken", notNullValue());
     }
 
-    //создание одинаковых юзеров 403
+
     @Test
+    @DisplayName("Создание одинаковых юзеров 403")
     public void recCreatingUserTest() {
         RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
         createUserStep
@@ -52,8 +56,9 @@ public class CreateUserTest {
                 .body("message", is("User already exists"));
 
     }
-    //пропуск одного из обязательных полей 403
+
     @Test
+    @DisplayName("Пропуск одного из обязательных полей 403")
     public void errorMissingRequiredFieldOnCreateUserTest() {
         password = "";
         RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
@@ -65,6 +70,7 @@ public class CreateUserTest {
     }
 
     @After
+    @DisplayName("Удаление пользователя")
     public void deleteCash(){
         String response = createUserStep
                 .loginUser(email, password)

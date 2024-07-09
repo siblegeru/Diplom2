@@ -1,6 +1,7 @@
 import diplom.CreateUserStep;
 import diplom.UpdateUserData;
 import diplom.UserData;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
@@ -13,7 +14,7 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 
-public class RefactorUserDataTest {
+public class UpdateUserDataTest {
     private String email;
     private String password;
     private String name;
@@ -23,6 +24,7 @@ public class RefactorUserDataTest {
     UserData user = new UserData();
 
     @Before
+    @DisplayName("Создание пользователя")
     public void userData(){
         email = RandomStringUtils.randomAlphabetic(10) + "@yandex.ru";
         password = RandomStringUtils.randomAlphabetic(10);
@@ -32,8 +34,9 @@ public class RefactorUserDataTest {
                 .createUser(email, password, name);
     }
 
-    //изменение имени
+
     @Test
+    @DisplayName("Изменение имени пользователя")
     public void updateUserNameTest() {
         response = createUserStep
                 .loginUser(email, password).extract().body().path("accessToken");
@@ -49,8 +52,9 @@ public class RefactorUserDataTest {
                 .body("user.name", equalTo(name));
     }
 
-    //изменение пароля
+
     @Test
+    @DisplayName("Изменение пароля пользователя")
     public void updateUserPasswordTest() {
         response = createUserStep
                 .loginUser(email, password).extract().body().path("accessToken");
@@ -65,8 +69,9 @@ public class RefactorUserDataTest {
                 .body("user.email", equalTo(email.toLowerCase()))
                 .body("user.name", equalTo(name));
     }
-    //изменение email
+
     @Test
+    @DisplayName("Изменение email пользователя")
     public void updateUserEmailTest() {
         response = createUserStep
                 .loginUser(email, password).extract().body().path("accessToken");
@@ -81,8 +86,9 @@ public class RefactorUserDataTest {
                 .body("user.email", equalTo(email.toLowerCase()))
                 .body("user.name", equalTo(name));;
     }
-    //изменение имени для неавторизованного пользователя
+
     @Test
+    @DisplayName("Изменение имени для неавторизованного пользователя")
     public void updateNoAutorizedUserNameTest() {
         createUserStep
                 .loginUser(email, password).extract().body().path("accessToken");
@@ -95,8 +101,9 @@ public class RefactorUserDataTest {
                 .body("success", is(false))
                 .body("message", is("You should be authorised"));
     }
-    //изменение имени для неавторизованного пользователя
+
     @Test
+    @DisplayName("Изменение имени для неавторизованного пользователя")
     public void updateNoAutorizedUserEmailTest() {
         createUserStep
                 .loginUser(email, password).extract().body().path("accessToken");
@@ -109,8 +116,9 @@ public class RefactorUserDataTest {
                 .body("success", is(false))
                 .body("message", is("You should be authorised"));
     }
-    //изменение имени для неавторизованного пользователя
+
     @Test
+    @DisplayName("Изменение имени для неавторизованного пользователя")
     public void updateNoAutorizedUserPasswordTest() {
         createUserStep
                 .loginUser(email, password).extract().body().path("accessToken");
@@ -124,6 +132,7 @@ public class RefactorUserDataTest {
                 .body("message", is("You should be authorised"));
     }
     @After
+    @DisplayName("Удаление пользователя")
     public void deleteCash(){
         response = createUserStep
                 .loginUser(email, password)

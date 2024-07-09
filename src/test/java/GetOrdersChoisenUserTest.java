@@ -1,6 +1,7 @@
 import diplom.CreateUserStep;
 import diplom.GetOrder;
 import diplom.UserData;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
@@ -17,11 +18,12 @@ public class GetOrdersChoisenUserTest {
     private String password;
     private String name;
     private String response;
-    UserData user = new UserData();
+    UserData user;
     CreateUserStep createUserStep = new CreateUserStep();
     GetOrder getOrder = new GetOrder();
 
     @Before
+    @DisplayName("Создание пользователя")
     public void userData(){
         email = RandomStringUtils.randomAlphabetic(10) + "@yandex.ru";
         password = RandomStringUtils.randomAlphabetic(10);
@@ -31,8 +33,9 @@ public class GetOrdersChoisenUserTest {
                 .createUser(email, password, name);
     }
 
-    //список заказов авторизованного пользователя
+
     @Test
+    @DisplayName("Список заказов авторизованного пользователя")
     public void autorizedUserOrderListTest() {
         response = createUserStep
                 .loginUser(email, password).extract().body().path("accessToken");
@@ -42,8 +45,9 @@ public class GetOrdersChoisenUserTest {
                 .body("success", is(true))
                 .body("orders", notNullValue());
     }
-    //список заказов неавторизованного пользователя
+
     @Test
+    @DisplayName("Список заказов неавторизованного пользователя")
     public void noAutorizedUserOrderListTest() {
         response = createUserStep
                 .loginUser(email, password).extract().body().path("accessToken");
@@ -55,6 +59,7 @@ public class GetOrdersChoisenUserTest {
     }
 
     @After
+    @DisplayName("Удаление пользователя")
     public void deleteCash(){
         response = createUserStep
                 .loginUser(email, password)

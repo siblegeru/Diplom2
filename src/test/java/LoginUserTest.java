@@ -1,4 +1,5 @@
 import diplom.CreateUserStep;
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
@@ -18,6 +19,7 @@ public class LoginUserTest {
     private CreateUserStep createUserStep = new CreateUserStep();
 
     @Before
+    @DisplayName("Создание пользователя")
     public void userData(){
         email = RandomStringUtils.randomAlphabetic(10) + "@yandex.ru";
         password = RandomStringUtils.randomAlphabetic(10);
@@ -26,8 +28,9 @@ public class LoginUserTest {
         createUserStep
                 .createUser(email, password, name);
     }
-    //логин под авторизованным пользователем
+
     @Test
+    @DisplayName("Логин под авторизованным пользователем")
     public void possibilityCreateNewUser() {
         createUserStep
                 .loginUser(email, password)
@@ -40,8 +43,9 @@ public class LoginUserTest {
                 .body("user.name", equalTo(name));
     }
 
-    //логин под неавторизованным пользователем
+
     @Test
+    @DisplayName("Логин под неавторизованным пользователем")
     public void errorNoAutorizedUserLoginTest() {
         createUserStep
                 .loginUser(email, "password")
@@ -51,6 +55,7 @@ public class LoginUserTest {
     }
 
     @After
+    @DisplayName("Удаление пользователя")
     public void deleteCash(){
         String response = createUserStep
                 .loginUser(email, password)

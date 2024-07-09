@@ -1,6 +1,7 @@
 import diplom.CreateOrder;
 import diplom.CreateUserStep;
 
+import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
@@ -11,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -25,6 +27,7 @@ public class CreateOrderTest {
     CreateOrder createOrder = new CreateOrder();
 
     @Before
+    @DisplayName("Генерация пользователя")
     public void userData(){
         email = RandomStringUtils.randomAlphabetic(10) + "@yandex.ru";
         password = RandomStringUtils.randomAlphabetic(10);
@@ -33,8 +36,9 @@ public class CreateOrderTest {
         createUserStep
                 .createUser(email, password, name);
     }
-    //создание заказа под авторизированным пользователем
+
     @Test
+    @DisplayName("создание заказа под авторизированным пользователем")
     public void createAutorizedUserOrderTest(){
         response = createUserStep
                 .loginUser(email, password)
@@ -43,56 +47,60 @@ public class CreateOrderTest {
                 .path("accessToken");
         List<String> listIngridient = createOrder
                 .getIngridientList().extract().body().path("data._id");
-        String orderIngridient = listIngridient.get(1);
         createOrder
-                .createOrderUser(response, orderIngridient)
+                .createOrderUser(response, listIngridient)
                 .statusCode(200)
                 .body("name", notNullValue())
                 .body("order", notNullValue())
                 .body("order.number", notNullValue())
                 .body("success", is(true));
     }
-    //создание заказа под неавторизированным пользователем
+
     @Test
+    @DisplayName("создание заказа под неавторизированным пользователем")
     public void createNoAutorizedUserOrderTest(){
         List<String> listIngridient = createOrder
                 .getIngridientList().extract().body().path("data._id");
-        String orderIngridient = listIngridient.get(1);
         createOrder
-                .createOrderUser("response", orderIngridient)
+                .createOrderUser("response", listIngridient)
                 .statusCode(200)
                 .body("name", notNullValue())
                 .body("order", notNullValue())
                 .body("order.number", notNullValue())
                 .body("success", is(true));
     }
-    //передача невалидного хэша 500
+
     @Test
+    @DisplayName("Передача невалидного хэша 500")
     public void createAutorizedUserOrderWhithInvalideHashIngridientsTest(){
         response = createUserStep
                 .loginUser(email, password)
                 .extract()
                 .body()
                 .path("accessToken");
+        List<String> listIngridient = Arrays.asList("orderIngridient", "orderIngridient");
         createOrder
-                .createOrderUser(response, "orderIngridient")
+                .createOrderUser(response, listIngridient)
                 .statusCode(500);
     }
-    //создание заказа без параметров проваливается, должна быть ошибка 400, но выдает 500 БАГ
+
     @Test
+    @DisplayName("создание заказа без параметров проваливается, должна быть ошибка 400, но выдает 500 БАГ")
     public void createAutorizedUserOrderWhithoutIngridientsTest(){
         response = createUserStep
                 .loginUser(email, password)
                 .extract()
                 .body()
                 .path("accessToken");
+        List<String> listIngridient = Arrays.asList();
         createOrder
-                .createOrderUser(response, "")
+                .createOrderUser(response, listIngridient)
                 .statusCode(400);
     }
 
 
     @After
+    @DisplayName("Удаление пользователя")
     public void deleteCash(){
         response = createUserStep
                 .loginUser(email, password)
