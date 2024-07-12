@@ -40,7 +40,7 @@ public class GetOrdersChoisenUserTest {
     @DisplayName("Список заказов авторизованного пользователя")
     public void autorizedUserOrderListTest() {
         response = createUserStep
-                .loginUser(email, password).extract().body().path("accessToken");
+                .loginUser(userData).extract().body().path("accessToken");
         getOrder
                 .getUsersOrder(response, user)
                 .statusCode(200)
@@ -52,7 +52,7 @@ public class GetOrdersChoisenUserTest {
     @DisplayName("Список заказов неавторизованного пользователя")
     public void noAutorizedUserOrderListTest() {
         response = createUserStep
-                .loginUser(email, password).extract().body().path("accessToken");
+                .loginUser(userData).extract().body().path("accessToken");
         getOrder
                 .getUsersOrder("response", user)
                 .statusCode(401)
@@ -64,7 +64,7 @@ public class GetOrdersChoisenUserTest {
     @DisplayName("Удаление пользователя")
     public void deleteCash(){
         response = createUserStep
-                .loginUser(email, password)
+                .loginUser(userData)
                 .extract().body()
                 .path("accessToken");
         if (response != null){

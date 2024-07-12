@@ -39,7 +39,7 @@ public class UpdateUserDataTest {
     @DisplayName("Изменение имени пользователя")
     public void updateUserNameTest() {
         response = createUserStep
-                .loginUser(email, password).extract().body().path("accessToken");
+                .loginUser(user).extract().body().path("accessToken");
         user.setName(RandomStringUtils.randomAlphabetic(10));
         user.setPassword(password);
         user.setEmail(email);
@@ -57,7 +57,7 @@ public class UpdateUserDataTest {
     @DisplayName("Изменение пароля пользователя")
     public void updateUserPasswordTest() {
         response = createUserStep
-                .loginUser(email, password).extract().body().path("accessToken");
+                .loginUser(user).extract().body().path("accessToken");
         user.setName(name);
         user.setPassword(RandomStringUtils.randomAlphabetic(10));
         user.setEmail(email);
@@ -74,7 +74,7 @@ public class UpdateUserDataTest {
     @DisplayName("Изменение email пользователя")
     public void updateUserEmailTest() {
         response = createUserStep
-                .loginUser(email, password).extract().body().path("accessToken");
+                .loginUser(user).extract().body().path("accessToken");
         user.setName(name);
         user.setPassword(password);
         user.setEmail(RandomStringUtils.randomAlphabetic(10) + "@yandex.ru");
@@ -91,7 +91,7 @@ public class UpdateUserDataTest {
     @DisplayName("Изменение имени для неавторизованного пользователя")
     public void updateNoAutorizedUserNameTest() {
         createUserStep
-                .loginUser(email, password).extract().body().path("accessToken");
+                .loginUser(user).extract().body().path("accessToken");
         user.setName(RandomStringUtils.randomAlphabetic(10));
         user.setPassword(password);
         user.setEmail(email);
@@ -106,7 +106,7 @@ public class UpdateUserDataTest {
     @DisplayName("Изменение имени для неавторизованного пользователя")
     public void updateNoAutorizedUserEmailTest() {
         createUserStep
-                .loginUser(email, password).extract().body().path("accessToken");
+                .loginUser(user).extract().body().path("accessToken");
         user.setName(name);
         user.setPassword(password);
         user.setEmail(RandomStringUtils.randomAlphabetic(10) + "@yandex.ru");
@@ -121,7 +121,7 @@ public class UpdateUserDataTest {
     @DisplayName("Изменение имени для неавторизованного пользователя")
     public void updateNoAutorizedUserPasswordTest() {
         createUserStep
-                .loginUser(email, password).extract().body().path("accessToken");
+                .loginUser(user).extract().body().path("accessToken");
         user.setName(name);
         user.setPassword(RandomStringUtils.randomAlphabetic(10));
         user.setEmail(email);
@@ -135,7 +135,7 @@ public class UpdateUserDataTest {
     @DisplayName("Удаление пользователя")
     public void deleteCash(){
         response = createUserStep
-                .loginUser(email, password)
+                .loginUser(user)
                 .extract().body()
                 .path("accessToken");
         if (response != null){

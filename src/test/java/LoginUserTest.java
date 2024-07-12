@@ -36,7 +36,7 @@ public class LoginUserTest {
     @DisplayName("Логин под авторизованным пользователем")
     public void possibilityCreateNewUser() {
         createUserStep
-                .loginUser(email, password)
+                .loginUser(userData)
                 .statusCode(200)
                 .body("success", is(true))
                 .body("accessToken", notNullValue())
@@ -50,8 +50,12 @@ public class LoginUserTest {
     @Test
     @DisplayName("Логин под неавторизованным пользователем")
     public void errorNoAutorizedUserLoginTest() {
+        email = RandomStringUtils.randomAlphabetic(10) + "@yandex.ru";
+        password = RandomStringUtils.randomAlphabetic(10);
+        name = RandomStringUtils.randomAlphabetic(10);
+        UserData noAutorizedUser = new UserData(name, email, password);
         createUserStep
-                .loginUser(email, "password")
+                .loginUser(noAutorizedUser)
                 .statusCode(401)
                 .body("success", is(false))
                 .body("message", is("email or password are incorrect"));
@@ -61,7 +65,7 @@ public class LoginUserTest {
     @DisplayName("Удаление пользователя")
     public void deleteCash(){
         String response = createUserStep
-                .loginUser(email, password)
+                .loginUser(userData)
                 .extract().body()
                 .path("accessToken");
         if (response != null){

@@ -25,14 +25,11 @@ public class CreateUserStep {
     }
 
     @Step("Логин юзера в системе")
-    public ValidatableResponse loginUser(String email, String password){
+    public ValidatableResponse loginUser(UserData userData){
         return given()
                 .contentType(ContentType.JSON)
                 .baseUri(BASE_URI)
-                .body("{\n" +
-                        "   \"email\": \"" + email + "\",\n" +
-                        "   \"password\": \"" + password + "\"\n" +
-                        "}")
+                .body(userData)
                 .when()
                 .post(LOGIN_USER)
                 .then();

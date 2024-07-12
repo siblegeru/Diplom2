@@ -79,7 +79,7 @@ public class CreateUserTest {
     @DisplayName("Удаление пользователя")
     public void deleteCash(){
         String response = createUserStep
-                .loginUser(email, password)
+                .loginUser(userData)
                 .extract().body()
                 .path("accessToken");
         if (response != null){
