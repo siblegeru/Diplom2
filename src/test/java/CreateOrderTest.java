@@ -1,6 +1,7 @@
 import diplom.CreateOrder;
 import diplom.CreateUserStep;
 
+import diplom.UserData;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -25,6 +26,7 @@ public class CreateOrderTest {
     private String response;
     private CreateUserStep createUserStep = new CreateUserStep();
     CreateOrder createOrder = new CreateOrder();
+    UserData userData;
 
     @Before
     @DisplayName("Генерация пользователя")
@@ -33,8 +35,9 @@ public class CreateOrderTest {
         password = RandomStringUtils.randomAlphabetic(10);
         name = RandomStringUtils.randomAlphabetic(10);
         RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
+        userData = new UserData(name, email, password);
         createUserStep
-                .createUser(email, password, name);
+                .createUser(userData);
     }
 
     @Test

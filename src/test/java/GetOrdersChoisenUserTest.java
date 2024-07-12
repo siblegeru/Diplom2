@@ -21,16 +21,18 @@ public class GetOrdersChoisenUserTest {
     UserData user;
     CreateUserStep createUserStep = new CreateUserStep();
     GetOrder getOrder = new GetOrder();
+    UserData userData;
 
     @Before
     @DisplayName("Создание пользователя")
-    public void userData(){
+    public void userDataForTets(){
         email = RandomStringUtils.randomAlphabetic(10) + "@yandex.ru";
         password = RandomStringUtils.randomAlphabetic(10);
         name = RandomStringUtils.randomAlphabetic(10);
         RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
+        userData = new UserData(name, email, password);
         createUserStep
-                .createUser(email, password, name);
+                .createUser(userData);
     }
 
 

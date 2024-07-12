@@ -1,4 +1,5 @@
 import diplom.CreateUserStep;
+import diplom.UserData;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -18,6 +19,7 @@ public class CreateUserTest {
     private String password;
     private String name;
     private CreateUserStep createUserStep = new CreateUserStep();
+    UserData userData;
 
     @Before
     @DisplayName("Генерация пользователя")
@@ -25,6 +27,7 @@ public class CreateUserTest {
         email = RandomStringUtils.randomAlphabetic(10) + "@yandex.ru";
         password = RandomStringUtils.randomAlphabetic(10);
         name = RandomStringUtils.randomAlphabetic(10);
+        userData = new UserData(name, email, password);
     }
 
 
@@ -33,7 +36,7 @@ public class CreateUserTest {
     public void possibilityCreateNewUser() {
         RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
         createUserStep
-                .createUser(email, password, name)
+                .createUser(userData)
                 .statusCode(200)
                 .body("success", equalTo(true))
                 .body("user.email", equalTo(email.toLowerCase()))
@@ -48,9 +51,9 @@ public class CreateUserTest {
     public void recCreatingUserTest() {
         RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
         createUserStep
-                .createUser(email, password, name);
+                .createUser(userData);
         createUserStep
-                .createUser(email, password, name)
+                .createUser(userData)
                 .statusCode(403)
                 .body("success", is(false))
                 .body("message", is("User already exists"));
@@ -61,9 +64,12 @@ public class CreateUserTest {
     @DisplayName("Пропуск одного из обязательных полей 403")
     public void errorMissingRequiredFieldOnCreateUserTest() {
         password = "";
+        email = RandomStringUtils.randomAlphabetic(10) + "yandex.ru";
+        name = RandomStringUtils.randomAlphabetic(10);
         RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
+        UserData failUserData = new UserData(name, email, password);
         createUserStep
-                .createUser(email, password, name)
+                .createUser(failUserData)
                 .statusCode(403)
                 .body("success", is(false))
                 .body("message", is("Email, password and name are required fields"));

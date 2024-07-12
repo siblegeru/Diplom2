@@ -1,4 +1,5 @@
 import diplom.CreateUserStep;
+import diplom.UserData;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -17,6 +18,7 @@ public class LoginUserTest {
     private String password;
     private String name;
     private CreateUserStep createUserStep = new CreateUserStep();
+    UserData userData;
 
     @Before
     @DisplayName("Создание пользователя")
@@ -25,8 +27,9 @@ public class LoginUserTest {
         password = RandomStringUtils.randomAlphabetic(10);
         name = RandomStringUtils.randomAlphabetic(10);
         RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
+        userData = new UserData(name, email, password);
         createUserStep
-                .createUser(email, password, name);
+                .createUser(userData);
     }
 
     @Test

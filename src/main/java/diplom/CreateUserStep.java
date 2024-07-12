@@ -14,15 +14,11 @@ public class CreateUserStep {
 
 
     @Step("Создание уникального пользователя")
-    public ValidatableResponse createUser(String email, String password, String name){
+    public ValidatableResponse createUser(UserData userData){
         return given()
                 .contentType(ContentType.JSON)
                 .baseUri(BASE_URI)
-                .body("{\n" +
-                        "   \"email\": \"" + email + "\",\n" +
-                        "   \"password\": \"" + password + "\",\n" +
-                        "    \"name\": \"" + name + "\"\n" +
-                        "}")
+                .body(userData)
                 .when()
                 .post(REGISTR_USER)
                 .then();

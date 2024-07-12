@@ -21,7 +21,7 @@ public class UpdateUserDataTest {
     private String response;
     private CreateUserStep createUserStep = new CreateUserStep();
     private UpdateUserData updateUserData = new UpdateUserData();
-    UserData user = new UserData();
+    UserData user = new UserData(name, email, password);
 
     @Before
     @DisplayName("Создание пользователя")
@@ -31,7 +31,7 @@ public class UpdateUserDataTest {
         name = RandomStringUtils.randomAlphabetic(10);
         RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
         createUserStep
-                .createUser(email, password, name);
+                .createUser(user);
     }
 
 
